@@ -1,4 +1,28 @@
+document.getElementById("load").onclick = function () {
+  const value = document.getElementById("product-id").value;
+  if (value === "") {
+    //get all items in api
+    axios.get('api/products').then(addList);
+  } else {
+      //get single item from api
+      axios
+      .get(`api/products/${value}`)
+      .then(addSingle)
+      .catch((err) => {
+        notFound();
+      });
+  }
 
+  
+  // const req = new XMLHttpRequest();
+  // req.open('GET', '/api/products');
+  // req.onload = function () {
+  //   const data = JSON.parse(req.response);
+  //   addList({data});
+  // }
+
+  // req.send();
+}
 function addList({ data }) {
   resetContentArea();
 
