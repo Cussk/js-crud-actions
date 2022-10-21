@@ -1,3 +1,4 @@
+//connects search api to front-end
 document.getElementById("search").onclick = function () {
   var textValue = document.getElementById("search-terms").value;
   var priceValue = document.getElementById("price").value;

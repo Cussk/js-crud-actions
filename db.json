@@ -23,6 +23,14 @@
       "description": "They float!",
       "color": "blue",
       "id": "518b59b6-6e00-4e00-9dfd-c00323030685"
+    },
+    {
+      "name": "Hiking",
+      "price": "10.00",
+      "quantity": "",
+      "description": "",
+      "color": "",
+      "id": "9f13e095-afdd-4fb6-8584-c3c759322352"
     }
   ]
 }

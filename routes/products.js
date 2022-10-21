@@ -12,7 +12,60 @@ module.exports = function (db) {
   //Create function
   .post( (req, res) => {
     const newProduct = req.body;
+
+    //client side error indicators
+    const errors = [];
+    //checks if name has been input
+    if (!newProduct.name) {
+      errors.push({
+        field: "name",
+        error: "required",
+        message: "Name is required",
+      });
+    }
+    //checks if price is a number
+    if (newProduct.price && isNaN(Number(newProduct.price))) {
+      errors.push({
+        field: "price",
+        error: "type",
+        message: "Price must be a number",
+      });
+    }
+    //limits name length
+    if (newProduct.name > 25) {
+      errors.push({
+        field: "name",
+        error: "length",
+        message: "Name cannot be longer than 25 characters",
+      });
+    }
+    //define valid color 
+    const allowedColors = [
+      "red",
+      "blue",
+      "orange",
+      "black",
+      "brown",
+      "",
+      null,
+      undefined,
+    ];
+    //checks if color is valid
+    if (!allowedColors.some((_) => _ === newProduct.color)) {
+      errors.push({
+        field: "color",
+        error: "allowedValue",
+        message:
+          "Must be one of the following colors: red, blue, orange, black, brown",
+      });
+    }
+    //if error occurs returns 422 status and error message
+    if (errors.length) {
+      res.status(422).send(errors);
+    } else {
+      //if no errors creates new product
     res.send(db.get("products").insert(newProduct).write());
+    };
   });
 
   //search single keyword

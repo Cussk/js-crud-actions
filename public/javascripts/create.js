@@ -1,16 +1,54 @@
-document.getElementById("submit").onclick = function(evt){
+document.getElementById("submit").onclick = function (evt) {
   evt.preventDefault();
-  const formData = new FormData (document.querySelector("form"));
+  //selects from form input from html
+  const form = document.querySelector("form");
+  //checks if form is valid
+  const isValid = form.checkValidity();
+  //if not valid returns an error response client side
+  if (!isValid) {
+    var err = {
+      response: {
+        data: [
+          {
+            field: "name",
+            message: "Name is required",
+          },
+        ],
+      },
+    };
 
-  axios.post("api/products", {
-    name: formData.get("name"),
-    price: formData.get("price"),
-    quantity: formData.get("quantity"),
-    description: formData.get("description"),
-    color: formData.get("color"),
-  })
-  .then(processResults);
+    handleErrors(err);
+    return;
+  }
+
+  const formData = new FormData(form);
+
+  axios
+    .post("/api/products", {
+      name: formData.get("name"),
+      price: formData.get("price"),
+      quantity: formData.get("quantity"),
+      description: formData.get("description"),
+      color: formData.get("color"),
+    })
+    .then(processResults)
+    .catch(handleErrors);
 };
+
+function handleErrors({ response }) {
+  //clears errors when corrected
+  const errorElements = document.getElementsByClassName("error");
+  for (let i = 0; i < errorElements.length; i++) {
+    errorElements[i].textContent = "";
+  }
+  //checks errors against errors in create api
+  const errors = response.data;
+  for (let i = 0; i < errors.length; i++) {
+    const { field, message } = errors[i];
+    const element = document.getElementsByName(field)[0].nextElementSibling;
+    element.textContent = message;
+  }
+}
 
 function processResults({ data }) {
   document.querySelector("form").reset();
